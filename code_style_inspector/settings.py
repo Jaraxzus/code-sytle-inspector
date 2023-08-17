@@ -35,10 +35,27 @@ LOGIN_REDIRECT_URL = "/"
 
 LOGOUT_REDIRECT_URL = "/"
 
-# Application definition
-# AUTHENTICATION_BACKENDS = [
-#     "django.contrib.auth.backends.ModelBackend",
-# ]
+
+# AUTH_USER_MODEL = (
+#     "authentication.User"  # Замените на свою кастомную модель пользователя
+# )
+
+# Auth settings
+AUTHENTICATION_BACKENDS = [
+    # "authentication.User"
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+SITE_ID = 1
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -47,7 +64,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "authentication",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "fileuploads"
+    # "authentication",
 ]
 
 MIDDLEWARE = [
