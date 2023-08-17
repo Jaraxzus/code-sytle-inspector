@@ -8,7 +8,7 @@ def check_style(file_path):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-        )
+        ).stdout
     except Exception as ex:
         print(f"error with pylint analiz\n{ex}")
         pylint_result = "pylint error"
@@ -19,9 +19,9 @@ def check_style(file_path):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-        )
+        ).stdout
     except Exception as ex:
         print(f"error with flake8 analiz\n{ex}")
         flake8_result = "flake8 error"
 
-    return (pylint_result.stdout, flake8_result.stdout)
+    return (pylint_result, flake8_result)

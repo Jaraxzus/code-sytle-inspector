@@ -2,12 +2,13 @@ import os
 
 from django.contrib import messages
 from django.core.files.storage import default_storage
+from django.db import transaction
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.text import get_valid_filename
 
 from .forms import FileUploadForm
-from .models import UploadedFile
+from .models import InspectionLog, UploadedFile
 
 
 def upload_file(request):
@@ -18,24 +19,35 @@ def upload_file(request):
             if file.name.endswith(".py"):
                 user = request.user
                 user_folder = f"uploads/user_{user.id}"
-                # Используем ID пользователя для уникальности
+
                 filename = get_valid_filename(file.name)
                 file_path = os.path.join(user_folder, filename)
 
-                # Проверка, есть ли уже такой файл у пользователя
                 existing_files = UploadedFile.objects.filter(
                     user=user, file=file_path
                 )
                 if existing_files:
-                    existing_file = existing_files.first()
-                    default_storage.delete(existing_file.file.path)
-                    existing_file.file = file  # Заменить файл на новый
-                    existing_file.inspected = False
-                    existing_file.save()
+                    with transaction.atomic():
+                        existing_file = existing_files.first()
+                        default_storage.delete(existing_file.file.path)
+                        existing_file.file = file
+                        existing_file.inspected = False
+                        existing_file.save()
+                        log = InspectionLog.objects.create(
+                            uploaded_file=existing_file,
+                            massage=f"update file {existing_file.file.name}",
+                        )
+                        log.save()
                 else:
-                    uploaded_file = UploadedFile(user=user, file=file_path)
-                    uploaded_file.save()
-                    default_storage.save(file_path, file)  # Сохранить файл
+                    with transaction.atomic():
+                        uploaded_file = UploadedFile(user=user, file=file_path)
+                        default_storage.save(file_path, file)
+                        uploaded_file.save()
+                        log = InspectionLog.objects.create(
+                            uploaded_file=uploaded_file,
+                            massage=f"load file {uploaded_file.file.name}",
+                        )
+                        log.save()
 
                 messages.success(request, "Файл успешно загружен.")
                 return redirect("file_list")
