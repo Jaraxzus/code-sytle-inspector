@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
-from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -31,13 +30,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/fileuploads/files/"
 
-LOGOUT_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/account/login"
 
 # Auth settings
 AUTHENTICATION_BACKENDS = [
-    # "authentication.User"
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
@@ -48,7 +46,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_UNIQUE_EMAIL = True
-# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 
@@ -63,10 +60,10 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "allauth",
     "allauth.account",
+    "django_celery_beat",
     "fileuploads",
     "csi",
-    "django_celery_beat",
-    # "authentication",
+    "notifications",
 ]
 
 MIDDLEWARE = [
@@ -187,3 +184,11 @@ CELERY_BEAT_SCHEDULE = {
         },
     },
 }
+
+# EMAIL
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")

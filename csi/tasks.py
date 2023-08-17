@@ -1,10 +1,12 @@
 from collections import defaultdict
 
 from celery import shared_task
+from django.contrib.auth.models import User
 from django.db import transaction
 from fileuploads.models import InspectionLog, UploadedFile
 
 from csi.utils import check_style
+from notifications.tasks import mail_user
 
 
 @shared_task
@@ -17,7 +19,7 @@ def inspection():
         grouped_files[row.user_id].append(row.pk)
 
     for _, pk_list in grouped_files.items():
-        inspect_users_files(pk_list)
+        inspect_users_files.delay(pk_list)
 
 
 @shared_task
@@ -53,3 +55,5 @@ def inspect_users_files(key_list):
                 pylint_result=rez[0],
                 flake8_result=rez[1],
             )
+        user = User.objects.get(pk=file_objects[0].user_id)
+        mail_user.delay(user.email)
