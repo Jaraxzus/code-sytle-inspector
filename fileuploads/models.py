@@ -8,6 +8,7 @@ def user_directory_path(instance, filename):
 
 class UploadedFile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    file_name = models.CharField(max_length=50)
     file = models.FileField(upload_to=user_directory_path)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     inspected = models.BooleanField(default=False)

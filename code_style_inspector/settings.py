@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 LOGIN_REDIRECT_URL = "/fileuploads/files/"
 
@@ -47,6 +47,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 
 
@@ -158,8 +159,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+# URL, по которому будут доступны статические файлы в браузере
+STATIC_URL = "/static/"
 
+# Пути к директориям, где Django будет искать статические файлы
+# Эти пути являются относительными путями от корня вашего проекта
+STATICFILES_DIRS = [
+    # Пример пути к директории статических файлов приложения
+    os.path.join(BASE_DIR, "code_style_inspector/static"),
+    # Другие директории, если необходимо
+]
+
+# Директория, в которую будут собраны статические файлы командой collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
