@@ -161,17 +161,8 @@ USE_TZ = True
 
 # URL, по которому будут доступны статические файлы в браузере
 STATIC_URL = "/static/"
-
-# Пути к директориям, где Django будет искать статические файлы
-# Эти пути являются относительными путями от корня вашего проекта
-STATICFILES_DIRS = [
-    # Пример пути к директории статических файлов приложения
-    os.path.join(BASE_DIR, "code_style_inspector/static"),
-    # Другие директории, если необходимо
-]
-
-# Директория, в которую будут собраны статические файлы командой collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
