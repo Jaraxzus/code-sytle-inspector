@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Список загруженных файлов</h2>
-    <a href="{% url 'upload_file' %}">Загрузить файл</a>
-    <ul>
+    <ul class="list-group mt-3">
         {% for file in files %}
-            <li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
                 <a href="{{ file.file.url }}">{{ file }}</a>
-                <a href="{% url 'file_detail' file.id %}">Подробнее</a>
-                <a href="{% url 'delete_file' file.id %}">Удалить</a>
+                <span>
+                    {% if file.inspected %}
+                        <span class="badge bg-success">Inspected</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Not Inspected</span>
+                    {% endif %}
+                </span>
+                <a href="{% url 'file_detail' file.id %}"
+                   class="btn btn-link stretched-link"></a>
+                <a href="{% url 'delete_file' file.id %}" class="btn btn-danger">Удалить</a>
             </li>
         {% endfor %}
     </ul>

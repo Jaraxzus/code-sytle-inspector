@@ -9,7 +9,7 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./media:/usr/src/app/media
+      - ../media:/usr/src/app/media
     networks:
       - internet
       - appnet
@@ -17,6 +17,8 @@ services:
     build: .
     restart: unless-stopped
     command: ./start_celery.sh
+    volumes:
+      - ../media:/usr/src/app/media
     depends_on:
       - db
       - redis
@@ -26,14 +28,14 @@ services:
     image: postgres
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
       retries: 5
     environment:
       POSTGRES_PASSWORD: admin
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data/
+      - ../postgres_data:/var/lib/postgresql/data/
     networks:
       - appnet
 

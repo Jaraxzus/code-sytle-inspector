@@ -1,16 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Подробная информация о файле "{{ filename }}"</h2>
-    <a href="{% url 'delete_file' uploaded_file.id %}">Удалить</a>
-    <ul>
+    <h2 class="mb-4">Подробная информация о файле "{{ filename }}"</h2>
+    <form action="{% url 'delete_file' uploaded_file.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger mb-3">Удалить файл</button>
+    </form>
+    <ul class="list-group">
         {% for log in logs %}
-            <li>
-                <p>Дата и время: {{ log.timestamp }}</p>
-                <p>Сообщение: {{ log.message }}</p>
-                <p>Pylint результат:</p>
-                <p>{{ log.pylint_result }}</p>
-                <p>Flake8 результат:</p>
-                <p>{{ log.flake8_result }}</p>
+            <li class="list-group-item">
+                <div>
+                    <p class="mb-1">
+                        <strong>Дата и время:</strong> {{ log.timestamp }}
+                    </p>
+                    <p class="mb-1">
+                        <strong>Сообщение:</strong> {{ log.message }}
+                    </p>
+                </div>
+                <div>
+                    <h5 class="mt-3">Pylint результат:</h5>
+                    <pre class="mb-0">{{ log.pylint_result }}</pre>
+                </div>
+                <div>
+                    <h5 class="mt-3">Flake8 результат:</h5>
+                    <pre class="mb-0">{{ log.flake8_result }}</pre>
+                </div>
             </li>
         {% endfor %}
     </ul>

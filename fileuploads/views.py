@@ -35,7 +35,7 @@ def upload_file(request):
                         existing_file.save()
                         log = InspectionLog.objects.create(
                             uploaded_file=existing_file,
-                            message=f"update file",
+                            message="update file",
                         )
                         log.save()
                 else:
@@ -45,7 +45,7 @@ def upload_file(request):
                         uploaded_file.save()
                         log = InspectionLog.objects.create(
                             uploaded_file=uploaded_file,
-                            message=f"load file",
+                            message="load file",
                         )
                         log.save()
 

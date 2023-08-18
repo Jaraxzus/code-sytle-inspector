@@ -1,43 +1,113 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block head_title %}{% endblock %}</title>
-    {% block extra_head %}
-    {% endblock %}
-  </head>
-  <body>
-    {% block body %}
-
-    {% if messages %}
-    <div>
-      <strong>{% trans "Messages:" %}</strong>
-      <ul>
-        {% for message in messages %}
-        <li>{{message}}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-
-    <div>
-      <strong>{% trans "Menu:" %}</strong>
-      <ul>
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'account_email' %}">{% trans "Change Email" %}</a></li>
-        <li><a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a></li>
-        {% else %}
-        <li><a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></li>
-        <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>
-        {% endif %}
-      </ul>
-    </div>
-    {% block content %}
-    {% endblock %}
-    {% endblock %}
-    {% block extra_body %}
-    {% endblock %}
-  </body>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% block head_title %}{% endblock %}
+        </title>
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .container {
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      
+      h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+      }
+      
+      p {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      
+      ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      
+      li {
+        margin-bottom: 5px;
+      }
+      
+      a {
+        text-decoration: none;
+        color: #007bff;
+      }
+      
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      
+      .button:hover {
+        background-color: #0056b3;
+      }
+        </style>
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}
+            {% if messages %}
+                <div class="container">
+                    <div class="alert alert-info">
+                        <strong>{% trans "Messages:" %}</strong>
+                        <ul>
+                            {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="container">
+                <div>
+                    <strong>{% trans "Menu:" %}</strong>
+                    <ul>
+                        {% if user.is_authenticated %}
+                            <li>
+                                <a href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'account_logout' %}" class="button">{% trans "Sign Out" %}</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{% url 'account_login' %}" class="button">{% trans "Sign In" %}</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'account_signup' %}" class="button">{% trans "Sign Up" %}</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% block content %}{% endblock %}
+            </div>
+        {% endblock %}
+        {% block extra_body %}{% endblock %}
+    </body>
 </html>

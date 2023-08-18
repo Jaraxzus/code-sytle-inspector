@@ -15,10 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.urls import include, path
-from django.contrib.auth.decorators import login_required
-from allauth import urls
 
 
 @login_required
@@ -27,7 +26,6 @@ def root_redirect(request):
 
 
 urlpatterns = [
-    # path("", views.home, name="home"),
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
     path("fileuploads/", include("fileuploads.urls")),

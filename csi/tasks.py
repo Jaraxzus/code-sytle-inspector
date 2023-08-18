@@ -4,9 +4,9 @@ from celery import shared_task
 from django.contrib.auth.models import User
 from django.db import transaction
 from fileuploads.models import InspectionLog, UploadedFile
+from notifications.tasks import mail_user
 
 from csi.utils import check_style
-from notifications.tasks import mail_user
 
 
 @shared_task
