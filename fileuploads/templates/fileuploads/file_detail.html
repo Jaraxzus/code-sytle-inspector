@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Подробная информация о файле "{{ filename }}"</h2>
+    <a href="{% url 'delete_file' uploaded_file.id %}">Удалить</a>
+    <ul>
+        {% for log in logs %}
+            <li>
+                <p>Дата и время: {{ log.timestamp }}</p>
+                <p>Сообщение: {{ log.message }}</p>
+                <p>Pylint результат:</p>
+                <p>{{ log.pylint_result }}</p>
+                <p>Flake8 результат:</p>
+                <p>{{ log.flake8_result }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

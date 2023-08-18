@@ -14,8 +14,9 @@ def check_style(file_path):
         pylint_result = "pylint error"
 
     try:
+        command = ["flake8", "--filename", "no", file_path]
         flake8_result = subprocess.run(
-            ["flake8", file_path],
+            command,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,

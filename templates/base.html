@@ -11,8 +11,8 @@
 <body class="container">
   <ul class="list-group">
     <li class="list-group-item">User: {{ user.email }}</li>
+    <li class="list-group-item">{% include 'header.html' %}</li>
   </ul>
-
   {% block content %} {% endblock %}
 </body>
 

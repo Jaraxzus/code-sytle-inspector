@@ -19,7 +19,7 @@ class UploadedFile(models.Model):
 class InspectionLog(models.Model):
     uploaded_file = models.ForeignKey(UploadedFile, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
-    massage = models.CharField(max_length=50)
+    message = models.CharField(max_length=50)
     pylint_result = models.TextField(default="")
     flake8_result = models.TextField(default="")
 

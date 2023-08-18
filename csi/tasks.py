@@ -51,7 +51,7 @@ def inspect_users_files(key_list):
         for obj, rez in zip(objects_to_update, result):
             InspectionLog.objects.create(
                 uploaded_file=obj,
-                massage="inspected",
+                message="inspected",
                 pylint_result=rez[0],
                 flake8_result=rez[1],
             )

@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.db import transaction
 from django.http import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import get_valid_filename
 
 from .forms import FileUploadForm
@@ -35,7 +35,7 @@ def upload_file(request):
                         existing_file.save()
                         log = InspectionLog.objects.create(
                             uploaded_file=existing_file,
-                            massage=f"update file {existing_file.file.name}",
+                            message=f"update file",
                         )
                         log.save()
                 else:
@@ -45,7 +45,7 @@ def upload_file(request):
                         uploaded_file.save()
                         log = InspectionLog.objects.create(
                             uploaded_file=uploaded_file,
-                            massage=f"load file {uploaded_file.file.name}",
+                            message=f"load file",
                         )
                         log.save()
 
@@ -76,3 +76,14 @@ def delete_file(request, file_id):
         raise Http404("Указанный файл не существует.")
 
     return redirect("file_list")
+
+
+def file_detail(request, file_id):
+    uploaded_file = get_object_or_404(UploadedFile, id=file_id)
+    logs = InspectionLog.objects.filter(uploaded_file=uploaded_file)
+    filename = os.path.basename(uploaded_file.file.name)
+    return render(
+        request,
+        "fileuploads/file_detail.html",
+        {"uploaded_file": uploaded_file, "logs": logs, "filename": filename},
+    )

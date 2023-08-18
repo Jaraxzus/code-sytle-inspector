@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = "/fileuploads/files/"
 
-LOGOUT_REDIRECT_URL = "/account/login"
+LOGOUT_REDIRECT_URL = "/accounts/login/"
 
 # Auth settings
 AUTHENTICATION_BACKENDS = [
@@ -46,7 +46,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_UNIQUE_EMAIL = True
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 
 
@@ -104,24 +103,24 @@ WSGI_APPLICATION = "code_style_inspector.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 # sqlite3
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-# postgres
 # DATABASES = {
 #     "default": {
-#         "ENGINE": "django.db.backends.postgresql_psycopg2",
-#         "NAME": "postgres",
-#         "USER": "postgres",
-#         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-#         "HOST": os.environ.get("POSTGRES_HOST"),
-#         "PORT": "5432",
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
 #     }
 # }
+
+# postgres
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "postgres",
+        "USER": "postgres",
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "PORT": "5432",
+    }
+}
 
 
 # Password validation
@@ -171,14 +170,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 # Celery Configuration Options
-CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/1"
+CELERY_BROKER_URL = f"redis://{os.environ.get('REDIS_HOST')}/0"
+CELERY_RESULT_BACKEND = f"redis://{os.environ.get('REDIS_HOST')}/1"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BEAT_SCHEDULE = {
     "30-seconds": {
         "task": "csi.tasks.inspection",
-        "schedule": 30.0,
+        "schedule": float(os.environ.get("CELERY_BEAT_DELAY_SEC")),
         "options": {
             "expires": 15.0,
         },
@@ -188,7 +187,8 @@ CELERY_BEAT_SCHEDULE = {
 # EMAIL
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL")
+# EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
 EMAIL_PORT = os.environ.get("EMAIL_PORT")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")

@@ -1,0 +1,52 @@
+services:
+  csi:
+    build: .
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    command: ./start_django.sh
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./media:/usr/src/app/media
+    networks:
+      - internet
+      - appnet
+  celery:
+    build: .
+    restart: unless-stopped
+    command: ./start_celery.sh
+    depends_on:
+      - db
+      - redis
+    networks:
+      - appnet
+  db:
+    image: postgres
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+    networks:
+      - appnet
+
+  redis:
+    image: redis
+    restart: unless-stopped
+    networks:
+      - appnet
+
+networks:
+  internet:
+    name: internet
+    driver: bridge
+  appnet:
+    name: appnet
+    driver: bridge

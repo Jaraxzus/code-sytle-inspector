@@ -1,0 +1,8 @@
+<header>
+  <h1>Code style inspector</h1>
+  {% if user.is_authenticated %}
+  <a href="/accounts/logout">Выйти</a>
+  {% else %}
+  <a href="/accounts/login">Войти</a>
+  {% endif %}
+</header>
