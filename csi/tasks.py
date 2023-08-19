@@ -47,13 +47,17 @@ def inspect_users_files(key_list):
         )
         objects_to_update.update(inspected=True)
 
+        log_objects_pk = []
         # Создание записи в логе для каждого обновленного объекта
         for obj, rez in zip(objects_to_update, result):
-            InspectionLog.objects.create(
-                uploaded_file=obj,
-                message="inspected",
-                pylint_result=rez[0],
-                flake8_result=rez[1],
+            log_objects_pk.append(
+                InspectionLog.objects.create(
+                    uploaded_file=obj,
+                    message="inspected",
+                    pylint_result=rez[0],
+                    flake8_result=rez[1],
+                ).pk
             )
         user = User.objects.get(pk=file_objects[0].user_id)
-        mail_user.delay(user.email)
+        print(log_objects_pk)
+        mail_user.delay(user.email, log_objects_pk)
